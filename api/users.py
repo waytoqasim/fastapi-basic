@@ -16,7 +16,7 @@ app.add_middleware(
     allow_headers=["*"]
 )
 
-FILE_NAME = "users.json"
+FILE_NAME = os.path.join(os.path.dirname(__file__), "users.json")
 
 class User(BaseModel):
     name: str
