@@ -28,7 +28,7 @@ def load_users():
     with open(FILE_NAME, "r") as file:
         try:
             return json.load(file)
-        except json.JSONDecodeError:
+        except (json.JSONDecodeError, TypeError):
             return []
 
 def save_users(users):
@@ -37,12 +37,12 @@ def save_users(users):
 
 @app.get("/api/users")
 def get_users():
-    return success_response("Users fetched successfully", data=load_users())
+    users = load_users()
+    return success_response("Users fetched successfully", data=users)
 
 @app.post("/api/users")
 def add_user(user: User):
     users = load_users()
-    # Prevent duplicate users by name (optional)
     if any(u['name'] == user.name for u in users):
         error_response("User already exists", status_code=400)
     users.append(user.dict())
