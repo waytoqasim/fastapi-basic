@@ -43,7 +43,9 @@ def get_users():
 @app.post("/api/users")
 def add_user(user: User):
     users = load_users()
-    if any(u['name'] == user.name for u in users):
+    if not isinstance(users, list):
+        users = []
+    if any(isinstance(u, dict) and u.get('name') == user.name for u in users):
         error_response("User already exists", status_code=400)
     users.append(user.dict())
     save_users(users)
